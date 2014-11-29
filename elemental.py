@@ -13,40 +13,55 @@ class Configuration:
     """
     symbols = []
     target = ""
+
     def __init__(self, word):
         """
         Creates a configuration
         """
         self.word = word
+
     def successors(self):
         """
         Generates a list of successors from the current configuration
         """
         successor_list = []
         for s in symbols:
-            if Configuration.target.startswith(s.lower(), len(self.word)):
-                successor_list.append(Configuration(self.word + s.lower()))
+            if Configuration.target.startswith(s.lower(), len(self.word_string())):
+                successor_list.append(Configuration(self.word + [s]))
         return successor_list
+
+    def word_string(self):
+        """
+        Converts internal word into a string
+        """
+        return "".join(self.word)
+
     def is_goal(self):
         """
         Returns true if the current configuration is the target
         """
-        return Configuration.target == self.word
+        return Configuration.target == self.word_string().lower()
+
+    def __repr__(self):
+        """
+        String representation of a configuration
+        """
+        return "{word_string} : ({target})".format(word_string=self.word_string(), target=Configuration.target)
 
 def bfs(word):
     """
-    Returns true if the word can be represented as a
-    collection of element symbols
+    Returns a goal configuration if the word can be represented as a
+    collection of element symbols. None otherwise.
     """
     queue = []
     Configuration.target = word
-    queue.append(Configuration(""))
+    queue.append(Configuration([]))
     while len(queue) > 0:
         current_config = queue.pop(0)
         if current_config.is_goal():
-            return True
+            return current_config
         queue.extend(current_config.successors())
-    return False
+    return None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find words that can be spelled using the symbols of elements.")
@@ -61,6 +76,7 @@ if __name__ == "__main__":
     # Solve
     for w in open(args.word_list):
         word = w.strip().lower()
-        if bfs(word):
-            print(word)
+        config = bfs(word)
+        if config != None:
+            print(config.word_string())
 
