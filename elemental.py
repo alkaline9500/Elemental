@@ -67,6 +67,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find words that can be spelled using the symbols of elements.")
     parser.add_argument("word_list", help="the filename of the list of words to evaluate")
     parser.add_argument("symbol_file", help="the filename of the element symbols")
+    parser.add_argument("-p", dest="percent", action="store_true", help="Show percentage analysis")
     args = parser.parse_args()
     
     # Load element symbols 
@@ -84,5 +85,6 @@ if __name__ == "__main__":
             count_successful += 1
         count_total += 1
 
-    print("{x}/{y} were successful = {p}".format(x=count_successful, y=count_total, p=(count_successful/count_total)))
+    if args.percent:
+        print("{x}/{y} were successful = {p}".format(x=count_successful, y=count_total, p=(count_successful/count_total)))
 
