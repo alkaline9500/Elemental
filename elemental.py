@@ -74,9 +74,15 @@ if __name__ == "__main__":
     Configuration.symbols = symbols
 
     # Solve
+    count_successful = 0
+    count_total = 0
     for w in open(args.word_list):
         word = w.strip().lower()
         config = bfs(word)
         if config != None:
             print(config.word_string())
+            count_successful += 1
+        count_total += 1
+
+    print("{x}/{y} were successful = {p}".format(x=count_successful, y=count_total, p=(count_successful/count_total)))
 
